@@ -1,32 +1,17 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",
-      "module": "commonjs",
-      "lib": ["ES2020"],
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "resolveJsonModule": true,
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "declaration": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "noImplicitAny": true,
-      "strictNullChecks": true,
-      "strictFunctionTypes": true,
-      "strictBindCallApply": true,
-      "strictPropertyInitialization": false,
-      "noImplicitThis": true,
-      "alwaysStrict": true,
-      "baseUrl": ".",
-      "paths": {
-        "*": ["node_modules/*"]
-      }
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "**/*.test.ts"]
-  }
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+}
