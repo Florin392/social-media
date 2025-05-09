@@ -1,13 +1,17 @@
 import express, { Application } from "express";
 import cors from "cors";
-
-import { json } from "stream/consumers";
+import cookieParser from "cookie-parser";
 import { environment } from "./config/environment.js";
-import logger from "./utils/logger.js";
 import {
   errorMiddleware,
   HttpException,
 } from "./middleware/error.middleware.js";
+import { configureSecurity } from "./middleware/security.middleware.js";
+import logger from "./utils/logger.js";
+import {
+  preventParamenterPollution,
+  sanitizeBody,
+} from "./middleware/sanitize.middleware.js";
 
 export class App {
   public app: Application;
@@ -20,9 +24,31 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
+    // security middlwares
+    this.app.use(
+      cors({
+        origin: environment.allowedOrigins,
+        credentials: true, // allow cockies
+      })
+    );
+
+    // configure security headers with Helmet
+    configureSecurity(this.app );
+
+    // Parse JSON bodies
     this.app.use(express.json({ limit: "10kb" })); // limit body size for security
 
-    this.app.use(express.urlencoded({ extended: true, limit: "10kb" })); // Parse URL-encoded bodies
+    // Parse URL-encoded bodies
+    this.app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+    // parse cookies
+    this.app.use(cookieParser());
+
+    // prevent parameter pollution
+    this.app.use(preventParamenterPollution);
+
+    // sanitize request body
+    this.app.use(sanitizeBody);
 
     // Basic loggin middleware
     if (environment.nodeEnv === "development") {
@@ -31,12 +57,27 @@ export class App {
         next();
       });
     }
+
+    // Security measure: set secure HTTP headers
+    this.app.use((req, res, next) => {
+      res.setHeader("X-XSS-Protection", "1; mode=block");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Strict-Transport-Security",
+        "max-age=31536000; includeSubDomains"
+      );
+      next();
+    });
   }
 
   private initializeRoutes(): void {
-    //Default route for API healt check
+    // Default route for API healt check
     this.app.get("/api/health", (req, res) => {
-      res.status(200).json({ status: "success", message: "API is running" });
+      res.status(200).json({
+        status: "success",
+        message: "API is running",
+      });
     });
 
     // Test error handling
