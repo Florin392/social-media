@@ -22,5 +22,16 @@ export const environment = {
   ).split(","),
   rateLimitWindow: parseInt(process.env.RATE_LIMIT_WINDOW || "15", 10), //in minutes
   rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || "100", 10), // max requests per window
+  emailHost: process.env.EMAIL_HOST || "smtp.mailtrap.io",
+  emailPort: parseInt(process.env.EMAIL_PORT || "2525", 10),
+  emailSecure: process.env.EMAIL_SECURE === "true",
+  emailUser: process.env.EMAIL_USER || "",
+  emailPassword: process.env.EMAIL_PASSWORD || "",
+  emailFrom: process.env.EMAIL_FROM || "noreply@socialmedia.com",
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
+  googleClientId: process.env.GOOGLE_CLIENT_ID || "",
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+  googleCallbackUrl:
+    process.env.GOOGLE_CALLBACK_URL ||
+    "http://localhost:3000/api/auth/google/callback",
 };

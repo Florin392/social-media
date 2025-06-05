@@ -9,9 +9,10 @@ import {
 import { configureSecurity } from "./middleware/security.middleware.js";
 import logger from "./utils/logger.js";
 import {
-  preventParamenterPollution,
+  preventParameterPollution,
   sanitizeBody,
 } from "./middleware/sanitize.middleware.js";
+import { authRoutes } from "./routes/auth.routes.js";
 
 export class App {
   public app: Application;
@@ -33,7 +34,7 @@ export class App {
     );
 
     // configure security headers with Helmet
-    configureSecurity(this.app );
+    configureSecurity(this.app);
 
     // Parse JSON bodies
     this.app.use(express.json({ limit: "10kb" })); // limit body size for security
@@ -45,7 +46,7 @@ export class App {
     this.app.use(cookieParser());
 
     // prevent parameter pollution
-    this.app.use(preventParamenterPollution);
+    this.app.use(preventParameterPollution);
 
     // sanitize request body
     this.app.use(sanitizeBody);
@@ -79,6 +80,9 @@ export class App {
         message: "API is running",
       });
     });
+
+    // Auth routes
+    this.app.use("/api/auth", authRoutes);
 
     // Test error handling
     this.app.get("/api/test-error", (req, res, next) => {

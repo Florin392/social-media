@@ -1,4 +1,5 @@
 import { Request } from "express";
+import { body } from "express-validator";
 
 // Validate password strength - min 8 char, at least 1 uppercase, 1 lowercase, 1 number, 1 special char
 export const isStrongPassword = (password: string): boolean => {
@@ -65,4 +66,36 @@ export const getClientIp = (req: Request): string => {
   return (
     (req.headers["x-forwarded-for"] as string) || req.socket.remoteAddress || ""
   );
+};
+
+// validation rules
+export const validationRules = {
+  username: () =>
+    body("username")
+      .isString()
+      .trim()
+      .isLength({ min: 3, max: 20 })
+      .withMessage("Username must be between 3 and 20 characters")
+      .matches(/^[a-zA-Z0-9_]+$/)
+      .withMessage(
+        "Username can only contain letters, numbers, and underscores"
+      ),
+  email: () =>
+    body("email")
+      .isEmail()
+      .withMessage("Must be a valid email address")
+      .normalizeEmail(),
+  password: () =>
+    body("password")
+      .isLength({ min: 8 })
+      .withMessage("Password must be at least 8 characters")
+      .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
+      .withMessage(
+        "Password must include lowercase letter, uppercase letter, number, and special character"
+      ),
+  token: () =>
+    body("token").isString().notEmpty().withMessage("Token is required"),
+
+  requiredString: (field: string) =>
+    body(field).isString().notEmpty().withMessage(`${field} is required`),
 };

@@ -58,7 +58,6 @@ const RefreshTokenSchema: Schema = new Schema({
 
 // Indexes for fast queries
 RefreshTokenSchema.index({ userId: 1 });
-RefreshTokenSchema.index({ token: 1 });
 
 export const RefreshToken = mongoose.model<IRefreshToken>(
   "RefreshToken",
