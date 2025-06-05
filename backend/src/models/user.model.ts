@@ -3,6 +3,7 @@ import { IUser } from "../types/auth.types.js";
 import bcrypt from "bcrypt";
 
 export interface IUserDocument extends Omit<IUser, "_id">, Document {
+  _id: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
   incrementLoginAttempts(): Promise<void>;
   resetLoginAttempts(): Promise<void>;
@@ -54,11 +55,6 @@ const UserSchema: Schema = new Schema(
   },
   { timestamps: true }
 );
-
-// Create indexes for frequently queried fields
-UserSchema.index({ username: 1 });
-UserSchema.index({ email: 1 });
-UserSchema.index({ googleId: 1 }, { sparse: true });
 
 // Constants for account locking
 const MAX_LOGIN_ATTEMPTS = 5;

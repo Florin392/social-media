@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { hasNoSqlInjection, sanitizeHtml } from "../utils/validators.js";
+import {
+  hasNoSqlInjection,
+  hasSqlInjection,
+  sanitizeHtml,
+} from "../utils/validators.js";
 import logger from "../utils/logger.js";
 import { HttpException } from "./error.middleware.js";
 
@@ -14,7 +18,7 @@ export const sanitizeBody = (
       // sanitize only string values
       if (typeof req.body[key] === "string") {
         // check for SQL injection attempts
-        if (hasNoSqlInjection(req.body[key])) {
+        if (hasSqlInjection(req.body[key])) {
           logger.warn(
             `Possible SQL injection attempt detected from IP: ${req.ip}`,
             {
@@ -47,7 +51,7 @@ export const sanitizeBody = (
 };
 
 // protect against HTTP Parameter Pollution
-export const preventParamenterPollution = (
+export const preventParameterPollution = (
   req: Request,
   res: Response,
   next: NextFunction

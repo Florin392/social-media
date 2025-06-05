@@ -7,7 +7,6 @@ export interface IUser {
   password: string;
   googleId?: string;
   isEmailVerified?: boolean;
-  lastLogin?: Date;
   loginAttempts?: number;
   lockUntil?: Date;
   createdAt?: Date;
